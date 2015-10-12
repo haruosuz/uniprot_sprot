@@ -69,7 +69,7 @@ Data files were downloaded on 2015-10-11 from http://www.ebi.ac.uk/uniprot/datab
 
 	grep ">" uniprot_sprot.fasta | perl -nle '$_=~/^>(\S+) (.+) OS=(.+) GN=/; $tmp = $3; $tmp =~ s/ /_/g; print "$tmp";' | sort | uniq -c | sort -nr | head -20 | awk '{print $2,":",$1}'
 
-[![](https://github.com/haruosuz/GENOME_REPORTS/blob/master/images/wordle_overview.png)]()
+[![](https://github.com/haruosuz/uniprot_sprot/blob/master/images/wordle_sprot_OS.png)]()
 [Word clouds](http://www.wordle.net/advanced) representing the 15 most abundant organisms in UniProtKB/Swiss-Prot. The font size of each organism is proportional to its number in the database.
 
 #### Top 15 functions
@@ -94,7 +94,7 @@ Data files were downloaded on 2015-10-11 from http://www.ebi.ac.uk/uniprot/datab
 
 	grep ">" uniprot_sprot.fasta | perl -nle '$_=~/^>(\S+) (.+) OS=(.+) GN=/; $tmp = $2; $tmp =~ s/ /_/g; print "$tmp";' | sort | uniq -c | sort -nr | head -16 | awk '{print $2,":",$1}'
 
-[![](https://github.com/haruosuz/GENOME_REPORTS/blob/master/images/wordle_overview.png)]()
+[![](https://github.com/haruosuz/uniprot_sprot/blob/master/images/wordle_sprot_FUN.png)]()
 [Word clouds](http://www.wordle.net/advanced) representing the 15 most abundant functions in UniProtKB/Swiss-Prot. The font size of each function is proportional to its number in the database.
 
 #### 
