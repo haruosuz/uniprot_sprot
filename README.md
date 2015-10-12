@@ -8,9 +8,11 @@ Last Update: 2015-10-11
 # UniProtKB/Swiss-Prot project
 Project started 2015-10-12.
 
+## References
+- [Swiss-Prot](https://ja.wikipedia.org/wiki/Swiss-Prot)
+
 ## Run environment
 Mac OS X 10.9.5  
-R version 3.2.2 (2015-08-14)  
 
 ## Project directories
 
@@ -42,15 +44,14 @@ Data files were downloaded on 2015-10-11 from http://www.ebi.ac.uk/uniprot/datab
 	$ls -lh uniprot_sprot.fasta 
 	-rw-r--r--  1 haruo  staff   252M Oct 11 10:37 uniprot_sprot.fasta
 
-	$for FILE in *.fasta; do echo -n $FILE' '; grep '>' $FILE | wc -l; done
-	uniprot_sprot.fasta   549215
+	grep '>' uniprot_sprot.fasta | wc -l # 549215
 
 	grep ">" uniprot_sprot.fasta | head 
 
-	grep ">" uniprot_sprot.fasta | head | perl -nle '$_=~/^>(\S+) (.+) OS=(.+) GN=/; print "$1 | $2 | $3";'
-
 - Perlワンライナー覚書 - Qiita http://qiita.com/tossh/items/f8d448c0c039f68c0ea3
 - 正規表現・ワイルドカード http://www.cudo29.org/regexp.html
+
+	grep ">" uniprot_sprot.fasta | head | perl -nle '$_=~/^>(\S+) (.+) OS=(.+) GN=/; print "$1 | $2 | $3";'
 
 #### Top 10 organisms
 
@@ -97,39 +98,52 @@ Data files were downloaded on 2015-10-11 from http://www.ebi.ac.uk/uniprot/datab
 [![](https://github.com/haruosuz/uniprot_sprot/blob/master/images/wordle_sprot_FUN.png)]()
 [Word clouds](http://www.wordle.net/advanced) representing the 15 most abundant functions in UniProtKB/Swiss-Prot. The font size of each function is proportional to its number in the database.
 
-#### 
+#### Count keywords in uniprot_sprot.fasta
+キーワードの計数
+
+##### each keyword
 
 	DB=uniprot_sprot.fasta
-	grep -i "Cyanobacteria" $DB | wc -l # 
-	grep ">.*\(Bifidobacterium\|Enterococcus\|Lactococcus\|Lactobacillus\|Leuconostoc\|Pediococcus\)" $DB | wc -l # lactic acid bacteria (LAB)
-	grep -i ">.*\(virus\|phage\|plasmid\)" $DB | wc -l # Mobile Genetic Elements
+	grep -i ">.*mitochondri" $DB | wc -l # 8427
+	grep -i ">.*chloroplast\|plastid" $DB | wc -l # 8339
+	grep -i ">.*Cyanobacteria" $DB | wc -l # 2
+	grep -i ">.*\(virus\|phage\|plasmid\)" $DB | wc -l # Mobile Genetic Elements # 17320
+	grep -i ">.*\(Bifidobacterium\|Enterococcus\|Lactococcus\|Lactobacillus\|Leuconostoc\|Pediococcus\)" $DB | wc -l # lactic acid bacteria (LAB) # 8051
 
-	grep -i "chloroplast\|plastid" $DB | wc -l
-	grep -i "chloroplast" $DB | wc -l
-	grep -i "plastid" $DB | wc -l
+##### multiple keywords
 
-	grep -i "mitochondri" $DB | wc -l
+	DB=uniprot_sprot.fasta
+	for REGEXP in ">.*Cyanobacteria" ">.*mitochondri" ">.*chloroplast\|plastid" ">.*\(virus\|phage\|plasmid\)" ">.*\(Bifidobacterium\|Enterococcus\|Lactococcus\|Lactobacillus\|Leuconostoc\|Pediococcus\)"; do echo -n \"$REGEXP\"' '; cat $DB | grep -i "$REGEXP" | wc -l; done
 
-##### typo
+	">.*Cyanobacteria"        2
+	">.*mitochondri"     8427
+	">.*chloroplast\|plastid"     8339
+	">.*\(virus\|phage\|plasmid\)"    17320
+	">.*\(Bifidobacterium\|Enterococcus\|Lactococcus\|Lactobacillus\|Leuconostoc\|Pediococcus\)"     8051
+
+##### chloroplast\|plastid
+葉緑体
+
+	DB=uniprot_sprot.fasta
+	grep -i ">.*chloroplast\|plastid" $DB | wc -l # 8339
+	grep -i ">.*chloroplast" $DB | wc -l # 8128
+	grep -i ">.*plastid" $DB | wc -l # 236
+	grep -i ">.*chloroplast.*plastid" $DB | wc -l # 0
+	grep -i ">.*plastid.*chloroplast" $DB | wc -l # 25
+	# 8128 + 236 - 25 = 8339
+
+##### mitochondria
+ミトコンドリア
 
 	DB=uniprot_sprot.fasta
 	grep -i "mitochondria" $DB > tmp.mitochondria.txt
 	grep -i "mitochondri" $DB > tmp.mitochondri.txt
+	diff tmp.mitochondri.txt tmp.mitochondria.txt
 
 	>sp|Q0DF13|SDH8A_ORYSJ Succinate dehydrogenase subunit 8A, mitochondrila OS=Oryza sativa subsp. japonica GN=SDH8A PE=3 SV=2
 
-http://www.uniprot.org/uniprot/Q0DF13  
-Succinate dehydrogenase subunit 8A, mitochondrila  
-*should be * 
-Succinate dehydrogenase subunit 8A, mitochondrial  
-
-----------
-
-## Results & Discussion
-
-----------
-
-## References
-- [Swiss-Prot](https://ja.wikipedia.org/wiki/Swiss-Prot)
+I reported the typographical error (i.e. "mitochondrila" should be "mitochondrial") at http://www.uniprot.org/contact, and got a response  
+From: "Elisabeth Gasteiger via RT" <help@uniprot.org>  
+Subject: [help #108963] [uuw] typo in sp|Q0DF13|SDH8A_ORYSJ  
 
 ----------
