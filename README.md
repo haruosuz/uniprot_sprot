@@ -175,14 +175,13 @@ At [Word clouds](http://www.wordle.net/advanced), pasted weighted words, clicked
     # get genus names of Cyanobacteria from ncbiGenomeList # 'Nostoc [Oscillatoria] [Scytonema
     ProkList=~/projects/ncbiGenomeList/data/prokaryotes.txt
     grep "Cyanobacteria" $ProkList | cut -f6 | sort -u | perl -pe 's/\n/\\|/g' # SubGroup
-    DIR=data/2015-10-26
     grep "Cyanobacteria" $ProkList | cut -f1 | grep -v "Candidatus" | \
-     cut -d" " -f1 | perl -pe "s/[\'\[\]]//g" | sort -u > $DIR/genusCyanobacteria.txt
+     cut -d" " -f1 | perl -pe "s/[\'\[\]]//g" | sort -u > data/genusCyanobacteria.txt
 
     # count genus names of Cyanobacteria in uniprot_sprot.fasta
     DB=data/2015-10-26/uniprot_sprot.fasta.gz
     DB=data/2015-12-27/uniprot_sprot.fasta.gz
-    zgrep '^>' $DB | grep -f $DIR/genusCyanobacteria.txt | wc -l
+    zgrep '^>' $DB | grep -f data/genusCyanobacteria.txt | wc -l
 
 	# Results
 	13839	# 2015-10-26
