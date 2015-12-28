@@ -43,8 +43,8 @@ Data were downloaded on 2015-10-26 and 2015-12-27 and decompressed, using:
 
     URL=ftp://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/complete/uniprot_sprot.fasta.gz
     URL=ftp://ftp.ebi.ac.uk/pub/databases/uniprot/knowledgebase/uniprot_sprot.fasta.gz
-    #nohup wget $URL &
-    wget -b $URL
+    nohup wget $URL &	# 2015-10-26
+    wget -b $URL	# 2015-12-27
     gunzip -c uniprot_sprot.fasta.gz > uniprot_sprot.fasta
 
 ### Inspecting Data
