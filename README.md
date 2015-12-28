@@ -80,13 +80,14 @@ GeneName is the first gene name of the UniProtKB entry. If there is no gene name
 - 正規表現・ワイルドカード http://www.cudo29.org/regexp.html 最短マッチ +?
 - 正規表現について-正規表現サンプル集 http://www.megasoft.co.jp/mifes/seiki/about.html 最長一致と最短一致
 
-        zgrep '^>' $DB | perl -ne '$_=~/^>(\S+) (.+) OS=(.+?) (GN|PE)=/; print "$1 | $2 | $3\n";' | head
+    zgrep '^>' $DB | perl -ne '$_=~/^>(\S+) (.+) OS=(.+?) (GN|PE)=/; print "$1 | $2 | $3\n";' | head
 
 #### Most abundant organisms
 配列の由来する生物の計数
 
     # Commands
-    zgrep '^>' $DB | perl -ne '$_=~/^>(\S+) (.+) OS=(.+?) (GN|PE)=/; print "$3\n";' | sort | uniq -c | sort -nr | head -20 | sed s/^/$'\t'/g
+    zgrep '^>' $DB | perl -ne '$_=~/^>(\S+) (.+) OS=(.+?) (GN|PE)=/; print "$3\n";' | \
+     sort | uniq -c | sort -nr | head -20 | sed s/^/$'\t'/g
 
 	# Results
 	20196 Homo sapiens
@@ -115,13 +116,15 @@ GeneName is the first gene name of the UniProtKB entry. If there is no gene name
 [Word clouds](http://www.wordle.net/advanced) representing the 20 most abundant organisms in UniProtKB/Swiss-Prot. The font size of each organism is proportional to its number in the database.
 At [Word clouds](http://www.wordle.net/advanced), pasted weighted words, clicked the "Go" button, and selected from the menu (Font=Steelfish; Layout=Horizontal; Color=Firenze). The weighted words were generated with the following command:
 
-    zgrep '^>' $DB | perl -ne '$_=~/^>(\S+) (.+) OS=(.+?) (GN|PE)=/; $tmp = $3; $tmp =~ s/ /./g; print "$tmp\n";' | sort | uniq -c | sort -nr | head -20 | awk '{print $2,":",$1}'
+    zgrep '^>' $DB | perl -ne '$_=~/^>(\S+) (.+) OS=(.+?) (GN|PE)=/; $tmp = $3; $tmp =~ s/ /./g; print "$tmp\n";' | \
+     sort | uniq -c | sort -nr | head -20 | awk '{print $2,":",$1}'
 
 #### Most abundant functions
 配列の機能の計数
 
     # Commands
-    zgrep '^>' $DB | perl -nle '$_=~/^>(\S+) (.+) OS=(.+?) (GN|PE)=/; print "$2";' | sort | uniq -c | sort -nr | head -20 | sed s/^/$'\t'/g
+    zgrep '^>' $DB | perl -nle '$_=~/^>(\S+) (.+) OS=(.+?) (GN|PE)=/; print "$2";' | \
+     sort | uniq -c | sort -nr | head -20 | sed s/^/$'\t'/g
 
 	# Results
 	1689 Cytochrome b
@@ -150,7 +153,8 @@ At [Word clouds](http://www.wordle.net/advanced), pasted weighted words, clicked
 [Word clouds](http://www.wordle.net/advanced) representing the 20 most abundant functions in UniProtKB/Swiss-Prot. The font size of each function is proportional to its number in the database.
 At [Word clouds](http://www.wordle.net/advanced), pasted weighted words, clicked the "Go" button, and selected from the menu (Font=Steelfish; Layout=Horizontal; Color=Firenze). The weighted words were generated with the following command:
 
-    zgrep '^>' $DB | perl -nle '$_=~/^>(\S+) (.+) OS=(.+?) (GN|PE)=/; $tmp = $2; $tmp =~ s/ /./g; print "$tmp";' | sort | uniq -c | sort -nr | head -20 | awk '{print $2,":",$1}'
+    zgrep '^>' $DB | perl -nle '$_=~/^>(\S+) (.+) OS=(.+?) (GN|PE)=/; $tmp = $2; $tmp =~ s/ /./g; print "$tmp";' | \
+     sort | uniq -c | sort -nr | head -20 | awk '{print $2,":",$1}'
 
 #### Count how many lines match a pattern
 ミトコンドリア (mitochondri)、
