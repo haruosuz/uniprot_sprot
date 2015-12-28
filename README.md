@@ -18,6 +18,8 @@ The most abundant function was 'Cytochrome b' (1689) followed by 50S and 30S rib
     uniprot_sprot/
      README.md: project documentation 
      data/: contains sequence data in FASTA format
+     scripts/: contains Shell scripts
+     analysis/: contains results of data analyses
      images/: contains images produced by Word clouds
 
 ## Data
