@@ -53,13 +53,14 @@ Data were downloaded on 2015-10-26 and 2015-12-27 and decompressed, using:
     zgrep '^>' $DB | wc -l
     zgrep '^>' $DB | head -n 3
 
+	# Examples
 	>sp|Q6IUF9|Z_MACHU RING finger protein Z OS=Machupo virus GN=Z PE=1 SV=1
 	>sp|P08105|Z_SHEEP Putative uncharacterized protein Z OS=Ovis aries PE=4 SV=1
 
+	>db|UniqueIdentifier|EntryName ProteinName OS=OrganismName[ GN=GeneName]PE=ProteinExistence SV=SequenceVersion
+
 - UniProtKB [FASTA headers](http://www.uniprot.org/help/fasta-headers)  
 GeneName is the first gene name of the UniProtKB entry. If there is no gene name, OrderedLocusName or ORFname, the GN field is not listed.
-
-            >db|UniqueIdentifier|EntryName ProteinName OS=OrganismName[ GN=GeneName]PE=ProteinExistence SV=SequenceVersion
 
 - Perlワンライナー覚書 - Qiita http://qiita.com/tossh/items/f8d448c0c039f68c0ea3
 - 正規表現・ワイルドカード http://www.cudo29.org/regexp.html 最短マッチ +?
@@ -145,27 +146,42 @@ At [Word clouds](http://www.wordle.net/advanced), pasted weighted words, clicked
 乳酸菌 lactic acid bacteria (Bifidobacterium\|Enterococcus\|Lactococcus\|Lactobacillus\|Leuconostoc\|Pediococcus)
 に由来する配列の計数
 
+    # Commands
     DB=data/2015-10-26/uniprot_sprot.fasta.gz
-
     for PATTERN in "mitochondri" "chloroplast\|plastid" "virus\|phage\|plasmid" "Bifidobacterium\|Enterococcus\|Lactococcus\|Lactobacillus\|Leuconostoc\|Pediococcus"; do echo -n "$PATTERN"' '; zgrep '^>' $DB | grep -i "$PATTERN" | wc -l; done
+
+	# Results
+	mitochondri     8434
+	chloroplast\|plastid     8358
+	virus\|phage\|plasmid    17322
+	Bifidobacterium\|Enterococcus\|Lactococcus\|Lactobacillus\|Leuconostoc\|Pediococcus     8051
 
 ##### Cyanobacteria
 
-    # Get Genus names of Cyanobacteria from ncbiGenomeList # 'Nostoc [Oscillatoria] [Scytonema
+    # Commands
+    # get genus names of Cyanobacteria from ncbiGenomeList # 'Nostoc [Oscillatoria] [Scytonema
     ProkList=~/projects/ncbiGenomeList/data/prokaryotes.txt
     grep "Cyanobacteria" $ProkList | cut -f6 | sort -u | perl -pe 's/\n/\\|/g' # SubGroup
     DIR=data/2015-10-26
     grep "Cyanobacteria" $ProkList | cut -f1 | grep -v "Candidatus" | cut -d" " -f1 | perl -pe "s/[\'\[\]]//g" | sort -u > $DIR/genusCyanobacteria.txt
-    zgrep '^>' $DB | grep -f $DIR/genusCyanobacteria.txt
+    # count genus names of Cyanobacteria in uniprot_sprot.fasta
+    DB=data/2015-10-26/uniprot_sprot.fasta.gz
+    zgrep '^>' $DB | grep -f $DIR/genusCyanobacteria.txt | wc -l
+
+	# Results
+	13839
 
 ##### Mitochondria
 
+    # Commands
     DIR=data/2015-10-26
+    DB=data/2015-10-26/uniprot_sprot.fasta.gz
     zgrep '^>' $DB | grep -i "mitochondria" > $DIR/lines.mitochondria.txt
     zgrep '^>' $DB | grep -i "mitochondri"  > $DIR/lines.mitochondri.txt
     diff $DIR/lines.mitochondria.txt $DIR/lines.mitochondri.txt
 
-    >sp|Q0DF13|SDH8A_ORYSJ Succinate dehydrogenase subunit 8A, mitochondrila OS=Oryza sativa subsp. japonica GN=SDH8A PE=3 SV=2
+	# Results
+	>sp|Q0DF13|SDH8A_ORYSJ Succinate dehydrogenase subunit 8A, mitochondrila OS=Oryza sativa subsp. japonica GN=SDH8A PE=3 SV=2
 
 I reported the typographical error (i.e. "mitochondrila" should be "mitochondrial") at http://www.uniprot.org/contact, and got a response  
 From: "Elisabeth Gasteiger via RT" <help@uniprot.org>  
