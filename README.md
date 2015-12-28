@@ -28,16 +28,6 @@ UniProtKB/Swiss-Prot protein sequence database was downloaded on 2015-10-26 from
     nohup wget ftp://ftp.ebi.ac.uk/pub/databases/uniprot/knowledgebase/uniprot_sprot.fasta.gz &
     gunzip -c uniprot_sprot.fasta.gz > uniprot_sprot.fasta
 
-## Scripts
-
-The shell script `scripts/run.sh` automatically carries out the entire steps: creating subdirectories, downloading data, and inspecting data.
-
-## Usage
-
-In the `uniprot_sprot/` directory, we run the shell script `scripts/run.sh` with:
-
-    bash scripts/run.sh > log.txt 2>&1 &
-
 ----------
 
 ## Steps
@@ -47,8 +37,8 @@ In the `uniprot_sprot/` directory, we run the shell script `scripts/run.sh` with
     DB=data/2015-10-26/uniprot_sprot.fasta.gz
 
     ls -lh $DB
-    zgrep "^>" $DB | wc -l
-    zgrep "^>" $DB | head -n 3
+    zgrep '^>' $DB | wc -l
+    zgrep '^>' $DB | head -n 3
 
 	>sp|Q6IUF9|Z_MACHU RING finger protein Z OS=Machupo virus GN=Z PE=1 SV=1
 	>sp|P08105|Z_SHEEP Putative uncharacterized protein Z OS=Ovis aries PE=4 SV=1
@@ -62,12 +52,12 @@ GeneName is the first gene name of the UniProtKB entry. If there is no gene name
 - 正規表現・ワイルドカード http://www.cudo29.org/regexp.html 最短マッチ +?
 - 正規表現について-正規表現サンプル集 http://www.megasoft.co.jp/mifes/seiki/about.html 最長一致と最短一致
 
-        zgrep "^>" $DB | perl -ne '$_=~/^>(\S+) (.+) OS=(.+?) (GN|PE)=/; print "$1 | $2 | $3\n";' | head
+        zgrep '^>' $DB | perl -ne '$_=~/^>(\S+) (.+) OS=(.+?) (GN|PE)=/; print "$1 | $2 | $3\n";' | head
 
 #### Most abundant organisms
 配列の由来する生物の計数
 
-    zgrep "^>" $DB | perl -ne '$_=~/^>(\S+) (.+) OS=(.+?) (GN|PE)=/; print "$3\n";' | sort | uniq -c | sort -nr | head -20 | sed s/^/$'\t'/g
+    zgrep '^>' $DB | perl -ne '$_=~/^>(\S+) (.+) OS=(.+?) (GN|PE)=/; print "$3\n";' | sort | uniq -c | sort -nr | head -20 | sed s/^/$'\t'/g
 
 	20196 Homo sapiens
 	16727 Mus musculus
@@ -90,7 +80,7 @@ GeneName is the first gene name of the UniProtKB entry. If there is no gene name
 	2028 Escherichia coli O157:H7
 	1890 Mycobacterium tuberculosis (strain CDC 1551 / Oshkosh)
 
-    zgrep "^>" $DB | perl -ne '$_=~/^>(\S+) (.+) OS=(.+?) (GN|PE)=/; $tmp = $3; $tmp =~ s/ /./g; print "$tmp\n";' | sort | uniq -c | sort -nr | head -20 | awk '{print $2,":",$1}'
+    zgrep '^>' $DB | perl -ne '$_=~/^>(\S+) (.+) OS=(.+?) (GN|PE)=/; $tmp = $3; $tmp =~ s/ /./g; print "$tmp\n";' | sort | uniq -c | sort -nr | head -20 | awk '{print $2,":",$1}'
     # Word clouds http://www.wordle.net/advanced Font=Steelfish; Layout=Horizontal; Color=Firenze
 
 ![](https://github.com/haruosuz/uniprot_sprot/blob/master/images/wordle_sprot_OS.png)
@@ -100,7 +90,7 @@ GeneName is the first gene name of the UniProtKB entry. If there is no gene name
 #### Most abundant functions
 配列の機能の計数
 
-    zgrep "^>" $DB | perl -nle '$_=~/^>(\S+) (.+) OS=(.+?) (GN|PE)=/; print "$2";' | sort | uniq -c | sort -nr | head -20 | sed s/^/$'\t'/g
+    zgrep '^>' $DB | perl -nle '$_=~/^>(\S+) (.+) OS=(.+?) (GN|PE)=/; print "$2";' | sort | uniq -c | sort -nr | head -20 | sed s/^/$'\t'/g
 
 	1689 Cytochrome b
 	 868 50S ribosomal protein L2
@@ -123,7 +113,7 @@ GeneName is the first gene name of the UniProtKB entry. If there is no gene name
 	 816 DNA-directed RNA polymerase subunit beta'
 	 813 50S ribosomal protein L3
 
-    zgrep "^>" $DB | perl -nle '$_=~/^>(\S+) (.+) OS=(.+?) (GN|PE)=/; $tmp = $2; $tmp =~ s/ /./g; print "$tmp";' | sort | uniq -c | sort -nr | head -20 | awk '{print $2,":",$1}'
+    zgrep '^>' $DB | perl -nle '$_=~/^>(\S+) (.+) OS=(.+?) (GN|PE)=/; $tmp = $2; $tmp =~ s/ /./g; print "$tmp";' | sort | uniq -c | sort -nr | head -20 | awk '{print $2,":",$1}'
     # Word clouds http://www.wordle.net/advanced Font=Steelfish; Layout=Horizontal; Color=Firenze
 
 ![](https://github.com/haruosuz/uniprot_sprot/blob/master/images/wordle_sprot_FUN.png)
@@ -140,20 +130,19 @@ GeneName is the first gene name of the UniProtKB entry. If there is no gene name
 
 ##### Cyanobacteria
 
-    DIR=data/2015-10-26
     # Get Genus names of Cyanobacteria from ncbiGenomeList # 'Nostoc [Oscillatoria] [Scytonema
     ProkList=~/projects/ncbiGenomeList/data/prokaryotes.txt
     grep "Cyanobacteria" $ProkList | cut -f6 | sort -u | perl -pe 's/\n/\\|/g' # SubGroup
-    grep "Cyanobacteria" $ProkList | cut -f1 | grep -v "Candidatus" | cut -d" " -f1 | perl -pe "s/[\'\[\]]//g" | sort -u > $DIR/tmp.txt
-    zgrep "^>" $DB | grep -f $DIR/tmp.txt
+    DIR=data/2015-10-26
+    grep "Cyanobacteria" $ProkList | cut -f1 | grep -v "Candidatus" | cut -d" " -f1 | perl -pe "s/[\'\[\]]//g" | sort -u > $DIR/genusCyanobacteria.txt
+    zgrep '^>' $DB | grep -f $DIR/genusCyanobacteria.txt
 
 ##### Mitochondria
 
     DIR=data/2015-10-26
-    DB=data/2015-10-26/uniprot_sprot.fasta.gz
-    zgrep -i "mitochondria" $DB > $DIR/tmp.mitochondria.txt
-    zgrep -i "mitochondri"  $DB > $DIR/tmp.mitochondri.txt
-    diff $DIR/tmp.mitochondri.txt $DIR/tmp.mitochondria.txt
+    zgrep '^>' $DB | grep -i "mitochondria" > $DIR/lines.mitochondria.txt
+    zgrep '^>' $DB | grep -i "mitochondri"  > $DIR/lines.mitochondri.txt
+    diff $DIR/lines.mitochondria.txt $DIR/lines.mitochondri.txt
 
     >sp|Q0DF13|SDH8A_ORYSJ Succinate dehydrogenase subunit 8A, mitochondrila OS=Oryza sativa subsp. japonica GN=SDH8A PE=3 SV=2
 
@@ -171,7 +160,4 @@ Subject: [help #108963] [uuw] typo in sp|Q0DF13|SDH8A_ORYSJ
 - [Nucleic Acids Res. 2010 Jul;38(13):4207-17. Transposases are the most abundant, most ubiquitous genes in nature.](http://www.ncbi.nlm.nih.gov/pubmed/20215432)
 
 ----------
-
- | sed s/^/$'\t'/g
-sed s/^/$'\t'/g tmp.txt > tab.txt     # 行頭にタブを追加
 
