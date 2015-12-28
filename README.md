@@ -49,9 +49,18 @@ Data were downloaded on 2015-10-26 and 2015-12-27 and decompressed, using:
 
 ### Inspecting Data
 
-    DB=data/2015-10-26/uniprot_sprot.fasta.gz
+    # Commands & Results
 
-    ls -lh $DB
+    find data -name "uniprot_sprot.fasta.gz" | xargs ls -lh
+	-rw-r--r--  1 haruo  staff    79M Oct 26 10:00 data/2015-10-26/uniprot_sprot.fasta.gz
+	-rw-r--r--  1 haruo  staff    79M Dec 27 11:46 data/2015-12-27/uniprot_sprot.fasta.gz
+
+    find data -name "uniprot_sprot.fasta.gz" | xargs zgrep -c '^>'
+	data/2015-10-26/uniprot_sprot.fasta.gz:549646
+	data/2015-12-27/uniprot_sprot.fasta.gz:550116
+
+    DB=data/2015-10-26/uniprot_sprot.fasta.gz
+    DB=data/2015-12-27/uniprot_sprot.fasta.gz
     zgrep '^>' $DB | wc -l
     zgrep '^>' $DB | head -n 3
 
@@ -73,10 +82,10 @@ GeneName is the first gene name of the UniProtKB entry. If there is no gene name
 #### Most abundant organisms
 配列の由来する生物の計数
 
-    # Command
+    # Commands
     zgrep '^>' $DB | perl -ne '$_=~/^>(\S+) (.+) OS=(.+?) (GN|PE)=/; print "$3\n";' | sort | uniq -c | sort -nr | head -20 | sed s/^/$'\t'/g
 
-	# Result
+	# Results
 	20196 Homo sapiens
 	16727 Mus musculus
 	14246 Arabidopsis thaliana
@@ -108,10 +117,10 @@ At [Word clouds](http://www.wordle.net/advanced), pasted weighted words, clicked
 #### Most abundant functions
 配列の機能の計数
 
-    # Command
+    # Commands
     zgrep '^>' $DB | perl -nle '$_=~/^>(\S+) (.+) OS=(.+?) (GN|PE)=/; print "$2";' | sort | uniq -c | sort -nr | head -20 | sed s/^/$'\t'/g
 
-	# Result
+	# Results
 	1689 Cytochrome b
 	 868 50S ribosomal protein L2
 	 866 30S ribosomal protein S19
@@ -150,7 +159,9 @@ At [Word clouds](http://www.wordle.net/advanced), pasted weighted words, clicked
 
     # Commands
     DB=data/2015-10-26/uniprot_sprot.fasta.gz
-    for PATTERN in "mitochondri" "chloroplast\|plastid" "virus\|phage\|plasmid" "Bifidobacterium\|Enterococcus\|Lactococcus\|Lactobacillus\|Leuconostoc\|Pediococcus"; do echo -n "$PATTERN"' '; zgrep '^>' $DB | grep -i "$PATTERN" | wc -l; done
+    for PATTERN in "mitochondri" "chloroplast\|plastid" "virus\|phage\|plasmid" \
+     "Bifidobacterium\|Enterococcus\|Lactococcus\|Lactobacillus\|Leuconostoc\|Pediococcus"; 
+     do echo -n "$PATTERN"' '; zgrep '^>' $DB | grep -i "$PATTERN" | wc -l; done
 
 	# Results
 	mitochondri     8434
@@ -165,21 +176,24 @@ At [Word clouds](http://www.wordle.net/advanced), pasted weighted words, clicked
     ProkList=~/projects/ncbiGenomeList/data/prokaryotes.txt
     grep "Cyanobacteria" $ProkList | cut -f6 | sort -u | perl -pe 's/\n/\\|/g' # SubGroup
     DIR=data/2015-10-26
-    grep "Cyanobacteria" $ProkList | cut -f1 | grep -v "Candidatus" | cut -d" " -f1 | perl -pe "s/[\'\[\]]//g" | sort -u > $DIR/genusCyanobacteria.txt
+    grep "Cyanobacteria" $ProkList | cut -f1 | grep -v "Candidatus" | \
+     cut -d" " -f1 | perl -pe "s/[\'\[\]]//g" | sort -u > $DIR/genusCyanobacteria.txt
+
     # count genus names of Cyanobacteria in uniprot_sprot.fasta
     DB=data/2015-10-26/uniprot_sprot.fasta.gz
+    DB=data/2015-12-27/uniprot_sprot.fasta.gz
     zgrep '^>' $DB | grep -f $DIR/genusCyanobacteria.txt | wc -l
 
 	# Results
-	13839
+	13839	# 2015-10-26
+	13841	# 2015-12-27
 
 ##### Mitochondria
 
     # Commands
     DIR=data/2015-10-26
-    DB=data/2015-10-26/uniprot_sprot.fasta.gz
-    zgrep '^>' $DB | grep -i "mitochondria" > $DIR/lines.mitochondria.txt
-    zgrep '^>' $DB | grep -i "mitochondri"  > $DIR/lines.mitochondri.txt
+    zgrep '^>' $DIR/uniprot_sprot.fasta.gz | grep -i "mitochondria" > $DIR/lines.mitochondria.txt
+    zgrep '^>' $DIR/uniprot_sprot.fasta.gz | grep -i "mitochondri"  > $DIR/lines.mitochondri.txt
     diff $DIR/lines.mitochondria.txt $DIR/lines.mitochondri.txt
 
 	# Results
@@ -188,6 +202,7 @@ At [Word clouds](http://www.wordle.net/advanced), pasted weighted words, clicked
 I reported the typographical error (i.e. "mitochondrila" should be "mitochondrial") at http://www.uniprot.org/contact, and got a response  
 From: "Elisabeth Gasteiger via RT" <help@uniprot.org>  
 Subject: [help #108963] [uuw] typo in sp|Q0DF13|SDH8A_ORYSJ  
+Date: October 12, 2015 at 15:27:03 GMT+9  
 
 ----------
 
