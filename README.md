@@ -18,19 +18,32 @@ The most abundant function was 'Cytochrome b' (1689) followed by 50S and 30S rib
     uniprot_sprot/
      README.md: project documentation 
      data/: contains sequence data in FASTA format
-     scripts/: contains R and Shell scripts
-     analysis/: contains results of data analyses
+     images/: contains images produced by Word clouds
 
 ## Data
 
-UniProtKB/Swiss-Prot protein sequence database was downloaded on 2015-10-26 from <http://www.ebi.ac.uk/uniprot/database/download.html> into `data/` and decompressed, using:  
+Data downloaded 2015-10-26 and 2015-12-27 from <http://www.ebi.ac.uk/uniprot/database/download.html> into `data/`:
 
-    nohup wget ftp://ftp.ebi.ac.uk/pub/databases/uniprot/knowledgebase/uniprot_sprot.fasta.gz &
-    gunzip -c uniprot_sprot.fasta.gz > uniprot_sprot.fasta
+    data/2015-10-26/uniprot_sprot.fasta.gz
+    data/2015-12-27/uniprot_sprot.fasta.gz
 
 ----------
 
 ## Steps
+
+### Creating directories
+
+    mkdir -p uniprot_sprot/{data,scripts,analysis/results-$(date +%F)}
+
+### Downloading data
+
+Data were downloaded on 2015-10-26 and 2015-12-27 and decompressed, using:  
+
+    URL=ftp://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/complete/uniprot_sprot.fasta.gz
+    URL=ftp://ftp.ebi.ac.uk/pub/databases/uniprot/knowledgebase/uniprot_sprot.fasta.gz
+    #nohup wget $URL &
+    wget -b $URL
+    gunzip -c uniprot_sprot.fasta.gz > uniprot_sprot.fasta
 
 ### Inspecting Data
 
@@ -57,8 +70,10 @@ GeneName is the first gene name of the UniProtKB entry. If there is no gene name
 #### Most abundant organisms
 配列の由来する生物の計数
 
+    # Command
     zgrep '^>' $DB | perl -ne '$_=~/^>(\S+) (.+) OS=(.+?) (GN|PE)=/; print "$3\n";' | sort | uniq -c | sort -nr | head -20 | sed s/^/$'\t'/g
 
+	# Result
 	20196 Homo sapiens
 	16727 Mus musculus
 	14246 Arabidopsis thaliana
@@ -80,18 +95,20 @@ GeneName is the first gene name of the UniProtKB entry. If there is no gene name
 	2028 Escherichia coli O157:H7
 	1890 Mycobacterium tuberculosis (strain CDC 1551 / Oshkosh)
 
-    zgrep '^>' $DB | perl -ne '$_=~/^>(\S+) (.+) OS=(.+?) (GN|PE)=/; $tmp = $3; $tmp =~ s/ /./g; print "$tmp\n";' | sort | uniq -c | sort -nr | head -20 | awk '{print $2,":",$1}'
-    # Word clouds http://www.wordle.net/advanced Font=Steelfish; Layout=Horizontal; Color=Firenze
-
 ![](https://github.com/haruosuz/uniprot_sprot/blob/master/images/wordle_sprot_OS.png)
 
 [Word clouds](http://www.wordle.net/advanced) representing the 20 most abundant organisms in UniProtKB/Swiss-Prot. The font size of each organism is proportional to its number in the database.
+At [Word clouds](http://www.wordle.net/advanced), pasted weighted words, clicked the "Go" button, and selected from the menu (Font=Steelfish; Layout=Horizontal; Color=Firenze). The weighted words were generated with the following command:
+
+    zgrep '^>' $DB | perl -ne '$_=~/^>(\S+) (.+) OS=(.+?) (GN|PE)=/; $tmp = $3; $tmp =~ s/ /./g; print "$tmp\n";' | sort | uniq -c | sort -nr | head -20 | awk '{print $2,":",$1}'
 
 #### Most abundant functions
 配列の機能の計数
 
+    # Command
     zgrep '^>' $DB | perl -nle '$_=~/^>(\S+) (.+) OS=(.+?) (GN|PE)=/; print "$2";' | sort | uniq -c | sort -nr | head -20 | sed s/^/$'\t'/g
 
+	# Result
 	1689 Cytochrome b
 	 868 50S ribosomal protein L2
 	 866 30S ribosomal protein S19
@@ -113,16 +130,20 @@ GeneName is the first gene name of the UniProtKB entry. If there is no gene name
 	 816 DNA-directed RNA polymerase subunit beta'
 	 813 50S ribosomal protein L3
 
-    zgrep '^>' $DB | perl -nle '$_=~/^>(\S+) (.+) OS=(.+?) (GN|PE)=/; $tmp = $2; $tmp =~ s/ /./g; print "$tmp";' | sort | uniq -c | sort -nr | head -20 | awk '{print $2,":",$1}'
-    # Word clouds http://www.wordle.net/advanced Font=Steelfish; Layout=Horizontal; Color=Firenze
-
 ![](https://github.com/haruosuz/uniprot_sprot/blob/master/images/wordle_sprot_FUN.png)
 
 [Word clouds](http://www.wordle.net/advanced) representing the 20 most abundant functions in UniProtKB/Swiss-Prot. The font size of each function is proportional to its number in the database.
+At [Word clouds](http://www.wordle.net/advanced), pasted weighted words, clicked the "Go" button, and selected from the menu (Font=Steelfish; Layout=Horizontal; Color=Firenze). The weighted words were generated with the following command:
+
+    zgrep '^>' $DB | perl -nle '$_=~/^>(\S+) (.+) OS=(.+?) (GN|PE)=/; $tmp = $2; $tmp =~ s/ /./g; print "$tmp";' | sort | uniq -c | sort -nr | head -20 | awk '{print $2,":",$1}'
 
 #### Count how many lines match a pattern
-ミトコンドリア (mitochondri)、葉緑体 (chloroplast\|plastid)、可動性遺伝因子 Mobile Genetic Elements (virus\|phage\|plasmid)、シアノバクテリア、乳酸菌 lactic acid bacteria (Bifidobacterium\|Enterococcus\|Lactococcus\|Lactobacillus\|Leuconostoc\|Pediococcus)
-の配列の計数
+ミトコンドリア (mitochondri)、
+葉緑体 (chloroplast\|plastid)、
+可動性遺伝因子 Mobile Genetic Elements (virus\|phage\|plasmid)、
+シアノバクテリア、
+乳酸菌 lactic acid bacteria (Bifidobacterium\|Enterococcus\|Lactococcus\|Lactobacillus\|Leuconostoc\|Pediococcus)
+に由来する配列の計数
 
     DB=data/2015-10-26/uniprot_sprot.fasta.gz
 
