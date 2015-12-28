@@ -49,16 +49,19 @@ Data were downloaded on 2015-10-26 and 2015-12-27 and decompressed, using:
 
 ### Inspecting Data
 
-    # Commands & Results
-
+    # Commands
     find data -name "uniprot_sprot.fasta.gz" | xargs ls -lh
+	# Results
 	-rw-r--r--  1 haruo  staff    79M Oct 26 10:00 data/2015-10-26/uniprot_sprot.fasta.gz
 	-rw-r--r--  1 haruo  staff    79M Dec 27 11:46 data/2015-12-27/uniprot_sprot.fasta.gz
 
+    # Commands
     find data -name "uniprot_sprot.fasta.gz" | xargs zgrep -c '^>'
+	# Results
 	data/2015-10-26/uniprot_sprot.fasta.gz:549646
 	data/2015-12-27/uniprot_sprot.fasta.gz:550116
 
+    # Commands
     DB=data/2015-10-26/uniprot_sprot.fasta.gz
     DB=data/2015-12-27/uniprot_sprot.fasta.gz
     zgrep '^>' $DB | wc -l
