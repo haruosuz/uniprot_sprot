@@ -160,8 +160,8 @@ At [Word clouds](http://www.wordle.net/advanced), pasted weighted words, clicked
 ミトコンドリア (mitochondri)、
 葉緑体 (chloroplast, plastid)、
 可動性遺伝因子 Mobile Genetic Elements (virus, phage, plasmid)、
-乳酸菌 lactic acid bacteria (Bifidobacterium, Enterococcus, Lactococcus, Lactobacillus, Leuconostoc, Pediococcus)
-シアノバクテリア
+乳酸菌 lactic acid bacteria (Bifidobacterium, Enterococcus, Lactococcus, Lactobacillus, Leuconostoc, Pediococcus)、
+シアノバクテリア、
 に由来する配列の計数
 
     # Commands
