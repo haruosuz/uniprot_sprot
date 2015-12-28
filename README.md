@@ -80,7 +80,7 @@ GeneName is the first gene name of the UniProtKB entry. If there is no gene name
 - 正規表現・ワイルドカード http://www.cudo29.org/regexp.html 最短マッチ +?
 - 正規表現について-正規表現サンプル集 http://www.megasoft.co.jp/mifes/seiki/about.html 最長一致と最短一致
 
-    zgrep '^>' $DB | perl -ne '$_=~/^>(\S+) (.+) OS=(.+?) (GN|PE)=/; print "$1 | $2 | $3\n";' | head
+        zgrep '^>' $DB | perl -ne '$_=~/^>(\S+) (.+) OS=(.+?) (GN|PE)=/; print "$1 | $2 | $3\n";' | head
 
 #### Most abundant organisms
 配列の由来する生物の計数
@@ -158,10 +158,10 @@ At [Word clouds](http://www.wordle.net/advanced), pasted weighted words, clicked
 
 #### Count how many lines match a pattern
 ミトコンドリア (mitochondri)、
-葉緑体 (chloroplast\|plastid)、
-可動性遺伝因子 Mobile Genetic Elements (virus\|phage\|plasmid)、
-シアノバクテリア、
-乳酸菌 lactic acid bacteria (Bifidobacterium\|Enterococcus\|Lactococcus\|Lactobacillus\|Leuconostoc\|Pediococcus)
+葉緑体 (chloroplast, plastid)、
+可動性遺伝因子 Mobile Genetic Elements (virus, phage, plasmid)、
+乳酸菌 lactic acid bacteria (Bifidobacterium, Enterococcus, Lactococcus, Lactobacillus, Leuconostoc, Pediococcus)
+シアノバクテリア
 に由来する配列の計数
 
     # Commands
