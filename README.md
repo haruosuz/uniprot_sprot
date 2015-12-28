@@ -35,7 +35,7 @@ Data downloaded 2015-10-26 and 2015-12-27 from <http://www.ebi.ac.uk/uniprot/dat
 
 ### Creating directories
 
-    mkdir -p uniprot_sprot/{data,scripts,analysis/results-$(date +%F)}
+    mkdir -p ~/projects/uniprot_sprot/{data/$(date +%F),scripts,analysis}
 
 ### Downloading data
 
