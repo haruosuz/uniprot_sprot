@@ -10,6 +10,8 @@ Project started 2015-10-12.
 
 Protein sequences were retrieved from UniProtKB/Swiss-Prot protein sequence database.
 As of 2015-10-26, there were 549646 entries in the FASTA file.
+The most abundant organism was 'Homo sapiens' (20196) followed by Mus musculus (16727) and Arabidopsis thaliana (14246).
+The most abundant function was 'Cytochrome b' (1689) followed by 50S and 30S ribosomal proteins.
 
 ## Project directories
 
@@ -48,22 +50,22 @@ In the `uniprot_sprot/` directory, we run the shell script `scripts/run.sh` with
     zgrep "^>" $DB | wc -l
     zgrep "^>" $DB | head -n 3
 
-	>sp|Q6UY62|Z_SABVB RING finger protein Z OS=Sabia mammarenavirus (isolate Human/Brasil/SPH114202/1990) GN=Z PE=1 SV=1
+	>sp|Q6IUF9|Z_MACHU RING finger protein Z OS=Machupo virus GN=Z PE=1 SV=1
 	>sp|P08105|Z_SHEEP Putative uncharacterized protein Z OS=Ovis aries PE=4 SV=1
 
-- UniProtKB [FASTA headers](http://www.uniprot.org/help/fasta-headers)
-
-	>db|UniqueIdentifier|EntryName ProteinName OS=OrganismName[ GN=GeneName]PE=ProteinExistence SV=SequenceVersion
-
+- UniProtKB [FASTA headers](http://www.uniprot.org/help/fasta-headers)  
 GeneName is the first gene name of the UniProtKB entry. If there is no gene name, OrderedLocusName or ORFname, the GN field is not listed.
+
+            >db|UniqueIdentifier|EntryName ProteinName OS=OrganismName[ GN=GeneName]PE=ProteinExistence SV=SequenceVersion
 
 - Perlワンライナー覚書 - Qiita http://qiita.com/tossh/items/f8d448c0c039f68c0ea3
 - 正規表現・ワイルドカード http://www.cudo29.org/regexp.html 最短マッチ +?
 - 正規表現について-正規表現サンプル集 http://www.megasoft.co.jp/mifes/seiki/about.html 最長一致と最短一致
 
-    zgrep "^>" $DB | perl -ne '$_=~/^>(\S+) (.+) OS=(.+?) (GN|PE)=/; print "$1 | $2 | $3\n";' | head
+        zgrep "^>" $DB | perl -ne '$_=~/^>(\S+) (.+) OS=(.+?) (GN|PE)=/; print "$1 | $2 | $3\n";' | head
 
 #### Most abundant organisms
+配列の由来する生物の計数
 
     zgrep "^>" $DB | perl -ne '$_=~/^>(\S+) (.+) OS=(.+?) (GN|PE)=/; print "$3\n";' | sort | uniq -c | sort -nr | head -20 | sed s/^/$'\t'/g
 
@@ -91,10 +93,12 @@ GeneName is the first gene name of the UniProtKB entry. If there is no gene name
     zgrep "^>" $DB | perl -ne '$_=~/^>(\S+) (.+) OS=(.+?) (GN|PE)=/; $tmp = $3; $tmp =~ s/ /./g; print "$tmp\n";' | sort | uniq -c | sort -nr | head -20 | awk '{print $2,":",$1}'
     # Word clouds http://www.wordle.net/advanced Font=Steelfish; Layout=Horizontal; Color=Firenze
 
-[![](https://github.com/haruosuz/uniprot_sprot/blob/master/images/wordle_sprot_OS.png)]()
+![](https://github.com/haruosuz/uniprot_sprot/blob/master/images/wordle_sprot_OS.png)
+
 [Word clouds](http://www.wordle.net/advanced) representing the 20 most abundant organisms in UniProtKB/Swiss-Prot. The font size of each organism is proportional to its number in the database.
 
 #### Most abundant functions
+配列の機能の計数
 
     zgrep "^>" $DB | perl -nle '$_=~/^>(\S+) (.+) OS=(.+?) (GN|PE)=/; print "$2";' | sort | uniq -c | sort -nr | head -20 | sed s/^/$'\t'/g
 
@@ -123,54 +127,16 @@ GeneName is the first gene name of the UniProtKB entry. If there is no gene name
     # Word clouds http://www.wordle.net/advanced Font=Steelfish; Layout=Horizontal; Color=Firenze
 
 ![](https://github.com/haruosuz/uniprot_sprot/blob/master/images/wordle_sprot_FUN.png)
+
 [Word clouds](http://www.wordle.net/advanced) representing the 20 most abundant functions in UniProtKB/Swiss-Prot. The font size of each function is proportional to its number in the database.
 
-#### Count keywords in uniprot_sprot.fasta
-キーワードの計数
+#### Count how many lines match a pattern
+ミトコンドリア (mitochondri)、葉緑体 (chloroplast\|plastid)、可動性遺伝因子 Mobile Genetic Elements (virus\|phage\|plasmid)、シアノバクテリア、乳酸菌 lactic acid bacteria (Bifidobacterium\|Enterococcus\|Lactococcus\|Lactobacillus\|Leuconostoc\|Pediococcus)
+の配列の計数
 
-##### each keyword
+    DB=data/2015-10-26/uniprot_sprot.fasta.gz
 
-	grep -i ">.*mitochondri" $DB | wc -l # 8427
-	grep -i ">.*chloroplast\|plastid" $DB | wc -l # 8339
-
-	grep -i ">.*\(virus\|phage\|plasmid\)" $DB | wc -l # Mobile Genetic Elements # 17320
-	grep -i ">.*\(Bifidobacterium\|Enterococcus\|Lactococcus\|Lactobacillus\|Leuconostoc\|Pediococcus\)" $DB | wc -l # lactic acid bacteria (LAB) # 8051
-
-##### multiple keywords
-
-	DB=uniprot_sprot.fasta
-	for REGEXP in ">.*Cyanobacteria" ">.*mitochondri" ">.*chloroplast\|plastid" ">.*\(virus\|phage\|plasmid\)" ">.*\(Bifidobacterium\|Enterococcus\|Lactococcus\|Lactobacillus\|Leuconostoc\|Pediococcus\)"; do echo -n \"$REGEXP\"' '; cat $DB | grep -i "$REGEXP" | wc -l; done
-
-	">.*Cyanobacteria"        2
-	">.*mitochondri"     8427
-	">.*chloroplast\|plastid"     8339
-	">.*\(virus\|phage\|plasmid\)"    17320
-	">.*\(Bifidobacterium\|Enterococcus\|Lactococcus\|Lactobacillus\|Leuconostoc\|Pediococcus\)"     8051
-
-##### Chloroplast\|plastid
-葉緑体
-
-	DB=uniprot_sprot.fasta
-	grep -i ">.*chloroplast\|plastid" $DB | wc -l # 8339
-	grep -i ">.*chloroplast" $DB | wc -l # 8128
-	grep -i ">.*plastid" $DB | wc -l # 236
-	grep -i ">.*chloroplast.*plastid" $DB | wc -l # 0
-	grep -i ">.*plastid.*chloroplast" $DB | wc -l # 25
-	# 8128 + 236 - 25 = 8339
-
-##### Mitochondria
-ミトコンドリア
-
-	DB=uniprot_sprot.fasta
-	grep -i "mitochondria" $DB > tmp.mitochondria.txt
-	grep -i "mitochondri" $DB > tmp.mitochondri.txt
-	diff tmp.mitochondri.txt tmp.mitochondria.txt
-
-	>sp|Q0DF13|SDH8A_ORYSJ Succinate dehydrogenase subunit 8A, mitochondrila OS=Oryza sativa subsp. japonica GN=SDH8A PE=3 SV=2
-
-I reported the typographical error (i.e. "mitochondrila" should be "mitochondrial") at http://www.uniprot.org/contact, and got a response  
-From: "Elisabeth Gasteiger via RT" <help@uniprot.org>  
-Subject: [help #108963] [uuw] typo in sp|Q0DF13|SDH8A_ORYSJ  
+    for PATTERN in "mitochondri" "chloroplast\|plastid" "virus\|phage\|plasmid" "Bifidobacterium\|Enterococcus\|Lactococcus\|Lactobacillus\|Leuconostoc\|Pediococcus"; do echo -n "$PATTERN"' '; zgrep '^>' $DB | grep -i "$PATTERN" | wc -l; done
 
 ##### Cyanobacteria
 
@@ -179,7 +145,21 @@ Subject: [help #108963] [uuw] typo in sp|Q0DF13|SDH8A_ORYSJ
     ProkList=~/projects/ncbiGenomeList/data/prokaryotes.txt
     grep "Cyanobacteria" $ProkList | cut -f6 | sort -u | perl -pe 's/\n/\\|/g' # SubGroup
     grep "Cyanobacteria" $ProkList | cut -f1 | grep -v "Candidatus" | cut -d" " -f1 | perl -pe "s/[\'\[\]]//g" | sort -u > $DIR/tmp.txt
-    zgrep "^>" $DIR/uniprot_sprot.fasta.gz | grep -f $DIR/tmp.txt
+    zgrep "^>" $DB | grep -f $DIR/tmp.txt
+
+##### Mitochondria
+
+    DIR=data/2015-10-26
+    DB=data/2015-10-26/uniprot_sprot.fasta.gz
+    zgrep -i "mitochondria" $DB > $DIR/tmp.mitochondria.txt
+    zgrep -i "mitochondri"  $DB > $DIR/tmp.mitochondri.txt
+    diff $DIR/tmp.mitochondri.txt $DIR/tmp.mitochondria.txt
+
+    >sp|Q0DF13|SDH8A_ORYSJ Succinate dehydrogenase subunit 8A, mitochondrila OS=Oryza sativa subsp. japonica GN=SDH8A PE=3 SV=2
+
+I reported the typographical error (i.e. "mitochondrila" should be "mitochondrial") at http://www.uniprot.org/contact, and got a response  
+From: "Elisabeth Gasteiger via RT" <help@uniprot.org>  
+Subject: [help #108963] [uuw] typo in sp|Q0DF13|SDH8A_ORYSJ  
 
 ----------
 
