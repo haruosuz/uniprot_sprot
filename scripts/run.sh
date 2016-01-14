@@ -10,7 +10,7 @@ mkdir -p ./{data,analysis}
 URL=ftp://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/complete/uniprot_sprot.fasta.gz
 URL=ftp://ftp.ebi.ac.uk/pub/databases/uniprot/knowledgebase/uniprot_sprot.fasta.gz
 #wget -P data/ $URL
-#curl $URL > data/uniprot_sprot.fasta.gz
+curl $URL > data/uniprot_sprot.fasta.gz
 
 # Inspecting Data
 ls -lh data/uniprot_sprot.fasta.gz
