@@ -25,7 +25,7 @@ len <- sapply(ld, length); summary(len)
 hist(len, main = "Histogram", xlab = "Length of sequences")
 
 cat("# Protein sequence information\n")
-AAstat(ld[[2]], plot = TRUE)
+AAstat(ld[[2]])
 
 # Print R version and packages
 sessionInfo()
