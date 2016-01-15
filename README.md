@@ -28,6 +28,7 @@ Data downloaded 2015-10-26 and 2015-12-27 from <http://www.ebi.ac.uk/uniprot/dat
 
     data/2015-10-26/uniprot_sprot.fasta.gz
     data/2015-12-27/uniprot_sprot.fasta.gz
+    data/uniprot_sprot.fasta.gz -> 2015-12-27/uniprot_sprot.fasta.gz (symbolic link)
 
 ### Scripts
 
