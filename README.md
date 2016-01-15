@@ -1,7 +1,7 @@
 ----------
 
 Haruo Suzuki  
-Last Update: 2015-12-28  
+Last Update: 2016-01-15  
 
 ----------
 
@@ -13,21 +13,49 @@ As of 2015-10-26, there were 549646 entries in the FASTA file.
 The most abundant organism was 'Homo sapiens' (20196) followed by Mus musculus (16727) and Arabidopsis thaliana (14246).
 The most abundant function was 'Cytochrome b' (1689) followed by 50S and 30S ribosomal proteins.
 
-## Project directories
+## Project directory structures
 
     uniprot_sprot/
      README.md: project documentation 
      data/: contains sequence data in FASTA format
-     scripts/: contains Shell scripts
+     scripts/: contains Shell and R scripts
      analysis/: contains results of data analyses
      images/: contains images produced by Word clouds
 
-## Data
+### Data
 
 Data downloaded 2015-10-26 and 2015-12-27 from <http://www.ebi.ac.uk/uniprot/database/download.html> into `data/`:
 
     data/2015-10-26/uniprot_sprot.fasta.gz
     data/2015-12-27/uniprot_sprot.fasta.gz
+
+### Scripts
+
+The shell script `scripts/run.sh` automatically carries out the entire steps: creating directories, downloading data, inspecting data, and running the R script for analyzing multiple FASTA format sequences (`my_fasta.R`).
+
+In the project's main directory `uniprot_sprot/`, you can run the shell script `scripts/run.sh` with:
+
+    bash scripts/run.sh > log.txt 2>&1 &
+
+### Analysis
+
+This will generate the following files in the directory `analysis/`:
+
+    analysis/
+     fasta_header.txt
+     fasta_header_Homo.sapiens.txt
+     Rplots.pdf                     
+     sequence.fasta
+
+#### Run environment
+
+	> sessionInfo()
+	R version 3.2.2 (2015-08-14)
+	Platform: x86_64-apple-darwin13.4.0 (64-bit)
+	Running under: OS X 10.9.5 (Mavericks)
+
+	$uname -a
+	Darwin localhost 13.4.0 Darwin Kernel Version 13.4.0: Wed Mar 18 16:20:14 PDT 2015; root:xnu-2422.115.14~1/RELEASE_X86_64 x86_64
 
 ----------
 
@@ -39,7 +67,7 @@ Data downloaded 2015-10-26 and 2015-12-27 from <http://www.ebi.ac.uk/uniprot/dat
 
 ### Downloading data
 
-Data were downloaded on 2015-10-26 and 2015-12-27 and decompressed, using:  
+Data were downloaded and decompressed on 2015-10-26 and 2015-12-27, using:  
 
     URL=ftp://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/complete/uniprot_sprot.fasta.gz
     URL=ftp://ftp.ebi.ac.uk/pub/databases/uniprot/knowledgebase/uniprot_sprot.fasta.gz
