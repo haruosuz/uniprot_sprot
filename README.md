@@ -22,7 +22,7 @@ The most abundant function was 'Cytochrome b' (1689) followed by 50S and 30S rib
      analysis/: contains results of data analyses
      images/: contains images produced by Word clouds
 
-### Data
+## Data
 
 Data downloaded 2015-10-26 and 2015-12-27 from <http://www.ebi.ac.uk/uniprot/database/download.html> into `data/`:
 
@@ -30,33 +30,29 @@ Data downloaded 2015-10-26 and 2015-12-27 from <http://www.ebi.ac.uk/uniprot/dat
     data/2015-12-27/uniprot_sprot.fasta.gz
     data/uniprot_sprot.fasta.gz -> 2015-12-27/uniprot_sprot.fasta.gz (symbolic link)
 
-### Scripts
+## Scripts
 
 The shell script `scripts/run.sh` automatically carries out the entire steps: creating directories, downloading data, inspecting data, and running the R script for analyzing multiple FASTA format sequences (`my_fasta.R`).
 
-In the project's main directory `uniprot_sprot/`, you can run the shell script `scripts/run.sh` with:
+## Analysis
+
+Let's run the driver script in the project's main directory `uniprot_sprot/` with:
 
     bash scripts/run.sh > log.txt 2>&1 &
 
-### Analysis
+This will generate the following files:
 
-This will generate the following files in the directory `analysis/`:
+    analysis/fasta_header.txt
+    analysis/fasta_header_Homo.sapiens.txt
+    analysis/Rplots.pdf
+    analysis/sequence.fasta
 
-    analysis/
-     fasta_header.txt
-     fasta_header_Homo.sapiens.txt
-     Rplots.pdf                     
-     sequence.fasta
+## Run environment
 
-#### Run environment
-
-	> sessionInfo()
-	R version 3.2.2 (2015-08-14)
-	Platform: x86_64-apple-darwin13.4.0 (64-bit)
-	Running under: OS X 10.9.5 (Mavericks)
-
-	$uname -a
-	Darwin localhost 13.4.0 Darwin Kernel Version 13.4.0: Wed Mar 18 16:20:14 PDT 2015; root:xnu-2422.115.14~1/RELEASE_X86_64 x86_64
+    > sessionInfo()
+    R version 3.2.2 (2015-08-14)
+    Platform: x86_64-apple-darwin13.4.0 (64-bit)
+    Running under: OS X 10.9.5 (Mavericks)
 
 ----------
 
