@@ -1,7 +1,7 @@
 ----------
 
 Haruo Suzuki  
-Last Update: 2016-01-15  
+Last Update: 2016-04-11  
 
 ----------
 
@@ -12,6 +12,13 @@ Protein sequences were retrieved from UniProtKB/Swiss-Prot protein sequence data
 As of 2015-10-26, there were 549646 entries in the FASTA file.
 The most abundant organism was 'Homo sapiens' (20196) followed by Mus musculus (16727) and Arabidopsis thaliana (14246).
 The most abundant function was 'Cytochrome b' (1689) followed by 50S and 30S ribosomal proteins.
+
+## Run environment
+
+    > sessionInfo()
+    R version 3.2.2 (2015-08-14)
+    Platform: x86_64-apple-darwin13.4.0 (64-bit)
+    Running under: OS X 10.9.5 (Mavericks)
 
 ## Project directory structures
 
@@ -30,6 +37,45 @@ Data downloaded 2015-10-26 and 2015-12-27 from <http://www.ebi.ac.uk/uniprot/dat
     data/2015-12-27/uniprot_sprot.fasta.gz
     data/uniprot_sprot.fasta.gz -> 2015-12-27/uniprot_sprot.fasta.gz (symbolic link)
 
+## Softwares
+
+### BLAST
+
+BLAST 2.3.0+ downloaded from <https://blast.ncbi.nlm.nih.gov/Blast.cgi?PAGE_TYPE=BlastDocs&DOC_TYPE=Download> using:
+
+    wget ftp://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/ncbi-blast-2.3.0+-universal-macosx.tar.gz.md5
+    wget ftp://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/ncbi-blast-2.3.0+-universal-macosx.tar.gz
+    tar xvzf ncbi-blast-2.3.0+-universal-macosx.tar.gz
+
+    # MD5 Checksums
+    MD5 (ncbi-blast-2.3.0+-universal-macosx.tar.gz) = aa1d484f52658839368db09d7b9b99d3
+
+### MUSCLE
+
+MUSCLE downloaded from <ttp://www.drive5.com/muscle/downloads.htm> using:
+
+    wget http://www.drive5.com/muscle/downloads3.8.31/muscle3.8.31_i86darwin64.tar.gz
+    tar xvzf muscle3.8.31_i86darwin64.tar.gz
+
+    # http://www.drive5.com/muscle/manual/stable.html
+    wget http://drive5.com/muscle/stable.tar.gz
+
+### Gblocks
+
+Gblocks Version 0.91b downloaded from <http://molevol.cmima.csic.es/castresana/Gblocks.html> using:
+
+    wget http://molevol.cmima.csic.es/castresana/Gblocks/Gblocks_OSX_0.91b.tar.Z
+    tar xvzf Gblocks_OSX_0.91b.tar.Z
+    #cp Gblocks_0.91b/Gblocks ~/bin
+
+### FastTree
+
+Downloading and Installing [FastTree](http://www.microbesonline.org/fasttree/) using:
+
+    wget http://www.microbesonline.org/fasttree/FastTree.c
+    gcc -O3 -finline-functions -funroll-loops -Wall -o FastTree FastTree.c -lm
+    #cp FastTree ~/bin
+
 ## Scripts
 
 The shell script `scripts/run.sh` automatically carries out the entire steps: creating directories, downloading data, inspecting data, and running the R script for analyzing multiple FASTA format sequences (`my_fasta.R`).
@@ -47,12 +93,9 @@ This will generate the following files:
     analysis/Rplots.pdf
     analysis/sequence.fasta
 
-## Run environment
+Let's run the BLAST script with:
 
-    > sessionInfo()
-    R version 3.2.2 (2015-08-14)
-    Platform: x86_64-apple-darwin13.4.0 (64-bit)
-    Running under: OS X 10.9.5 (Mavericks)
+    bash scripts/run_blastp_sprot.sh > log-blastp_sprot.txt 2>&1 &
 
 ----------
 
