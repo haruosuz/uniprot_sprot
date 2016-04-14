@@ -56,6 +56,7 @@ MUSCLE downloaded from <ttp://www.drive5.com/muscle/downloads.htm> using:
 
     wget http://www.drive5.com/muscle/downloads3.8.31/muscle3.8.31_i86darwin64.tar.gz
     tar xvzf muscle3.8.31_i86darwin64.tar.gz
+    #cp muscle3.8.31_i86darwin64 ~/bin/muscle 
 
     # http://www.drive5.com/muscle/manual/stable.html
     wget http://drive5.com/muscle/stable.tar.gz
