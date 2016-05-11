@@ -31,11 +31,35 @@ The most abundant function was 'Cytochrome b' (1689) followed by 50S and 30S rib
 
 ## Data
 
-Data downloaded 2015-10-26 and 2015-12-27 from <http://www.ebi.ac.uk/uniprot/database/download.html> into `data/`:
+Data downloaded 2015-10-26, 2015-12-27, and 2016-04-11 from <http://www.ebi.ac.uk/uniprot/database/download.html> into `data/`:
 
     data/2015-10-26/uniprot_sprot.fasta.gz
     data/2015-12-27/uniprot_sprot.fasta.gz
-    data/uniprot_sprot.fasta.gz -> 2015-12-27/uniprot_sprot.fasta.gz (symbolic link)
+    data/2016-04-11/uniprot_sprot.fasta.gz
+    data/uniprot_sprot.fasta.gz -> 2016-04-11/uniprot_sprot.fasta.gz (symbolic link)
+
+## Scripts
+
+The shell script `scripts/run.sh` automatically carries out the entire steps: creating directories, downloading data, inspecting data, and running the R script for analyzing multiple FASTA format sequences (`my_fasta.R`).
+
+## Analysis
+
+Let's run the driver script in the project's main directory `uniprot_sprot/` with:
+
+    bash scripts/run.sh > log.txt 2>&1 &
+
+This will generate the following files:
+
+    analysis/fasta_header.txt
+    analysis/fasta_header_Homo.sapiens.txt
+    analysis/Rplots.pdf
+    analysis/sequence.fasta
+
+Let's run the BLAST and phylogeny scripts with:
+
+    bash scripts/run_blastp_sprot.sh >& log-blastp_sprot.txt &
+    bash scripts/run_phylogeny.sh >& log-phylogeny.txt &
+    Rscript --vanilla scripts/my_ape.R
 
 ## Softwares
 
@@ -52,7 +76,7 @@ BLAST 2.3.0+ downloaded from <https://blast.ncbi.nlm.nih.gov/Blast.cgi?PAGE_TYPE
 
 ### MUSCLE
 
-MUSCLE downloaded from <ttp://www.drive5.com/muscle/downloads.htm> using:
+MUSCLE downloaded from <http://www.drive5.com/muscle/downloads.htm> using:
 
     wget http://www.drive5.com/muscle/downloads3.8.31/muscle3.8.31_i86darwin64.tar.gz
     tar xvzf muscle3.8.31_i86darwin64.tar.gz
@@ -77,27 +101,6 @@ Downloading and Installing [FastTree](http://www.microbesonline.org/fasttree/) u
     gcc -O3 -finline-functions -funroll-loops -Wall -o FastTree FastTree.c -lm
     #cp FastTree ~/bin
 
-## Scripts
-
-The shell script `scripts/run.sh` automatically carries out the entire steps: creating directories, downloading data, inspecting data, and running the R script for analyzing multiple FASTA format sequences (`my_fasta.R`).
-
-## Analysis
-
-Let's run the driver script in the project's main directory `uniprot_sprot/` with:
-
-    bash scripts/run.sh > log.txt 2>&1 &
-
-This will generate the following files:
-
-    analysis/fasta_header.txt
-    analysis/fasta_header_Homo.sapiens.txt
-    analysis/Rplots.pdf
-    analysis/sequence.fasta
-
-Let's run the BLAST script with:
-
-    bash scripts/run_blastp_sprot.sh > log-blastp_sprot.txt 2>&1 &
-
 ----------
 
 ## Steps
@@ -108,13 +111,16 @@ Let's run the BLAST script with:
 
 ### Downloading data
 
-Data were downloaded and decompressed on 2015-10-26 and 2015-12-27, using:  
+Data were downloaded and decompressed, using:  
 
     URL=ftp://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/complete/uniprot_sprot.fasta.gz
     URL=ftp://ftp.ebi.ac.uk/pub/databases/uniprot/knowledgebase/uniprot_sprot.fasta.gz
-    nohup wget $URL &	# 2015-10-26
-    wget -b $URL	# 2015-12-27
+    nohup wget $URL &		# 2015-10-26
+    wget -b $URL		# 2015-12-27
+    wget -nv -P data/ $URL	# 2016-04-11
     gunzip -c uniprot_sprot.fasta.gz > uniprot_sprot.fasta
+
+    ln -s 2016-04-11/uniprot_sprot.fasta.gz
 
 ### Inspecting Data
 
